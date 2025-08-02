@@ -17,7 +17,7 @@ const userAuth = (req, res, next) => {
 
         next();
     } catch (error) {
-        return res.json({ success: false, message: error.message });
+        return res.json({ success: false, message: "From auth middleware: " + error.message });
     }
 }
 

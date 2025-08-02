@@ -15,7 +15,7 @@ Simple and robust authentication workflow with a beautiful UI, built using the M
    ```
 4. Create a `.env` file based on `.env.example`:
    ```
-   MONGODB_URI=mongodb://user:password@localhost:27017/myAwesomeDatabase?authSource=admin
+   MONGODB_URI=mongodb://user:password@localhost:27017/myAwesomeDatabase
    DATABASE=myAwesomeDatabase
    JWT_SECRET=SECRET#KEY
    NODE_ENV=dev
