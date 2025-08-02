@@ -48,7 +48,7 @@ Simple and robust authentication workflow with a beautiful UI, built using the M
 - `POST /api/auth/set-new-password`: Reset your password if case you forget it (`{"email": "string", "otp": "string", "newPassword": "string"}`).
 
 ### User
-- `GET /api/user/user-data`: Get user data.
+- `GET /api/user/user-data`: Get user data (`{"success": true, "userData": {"name": "string", "email": "string", "isAccountVerified": boolean}}`).
 
 ## Features
 - Secure authentication with JWT and bcrypt.
