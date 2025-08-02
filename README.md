@@ -15,10 +15,10 @@ Simple and robust authentication workflow with a beautiful UI, built using the M
    ```
 4. Create a `.env` file based on `.env.example`:
    ```
-   MONGODB_URI=mongodb://user:password@localhost:27017/myAwesomeDatabase
-   DATABASE=myAwesomeDatabase
-   JWT_SECRET=SECRET#KEY
-   NODE_ENV=dev
+   MONGODB_URI="mongodb://user:password@localhost:27017"
+   DATABASE="myAwesomeDatabase"
+   JWT_SECRET="SECRET#KEY"
+   NODE_ENV="dev"
    PORT=3301
    ```
 5. Start MongoDB:
@@ -36,10 +36,19 @@ Simple and robust authentication workflow with a beautiful UI, built using the M
    ```
 
 ## API Endpoints
+### Authentication
 - `GET /`: Health check ("Server running correctly").
 - `POST /api/auth/register`: Register a user (`{ "name": "string", "email": "string", "password": "string" }`).
 - `POST /api/auth/login`: Authenticate a user (`{ "name": "string", "password": "string" }`).
 - `POST /api/auth/logout`: Log out a user.
+- `POST /api/auth/send-verification-code`: Send a one-time passkey to verify your email account.
+- `POST /api/auth/verify-account`: Verify your account using the one-time passkey in your email (`{"otp": "string"}`).
+- `POST /api/auth/is-authenticated`: Verify whether account is authenticated or not.
+- `POST /api/auth/send-password-reset-otp`: Request a one-time passkey to reset your password (`{"email": "string"}`).
+- `POST /api/auth/set-new-password`: Reset your password if case you forget it (`{"email": "string", "otp": "string", "newPassword": "string"}`).
+
+### User
+- `GET /api/user/user-data`: Get user data.
 
 ## Features
 - Secure authentication with JWT and bcrypt.
