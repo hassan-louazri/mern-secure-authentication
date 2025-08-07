@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 import transporter from "../config/nodemailer.js";
+import { EMAIL_VERIFY_TEMPLATE, PASSWORD_RESET_TEMPLATE } from "../config/emailTemplates.js";
 
 const SALT = 12;
 export const register = async (req, res) => {
@@ -106,7 +107,7 @@ export const logout = async (_, res) => {
 
 export const sendOTPVerification = async (req, res) => {
     try {
-        const { userId } = req.body;
+        const { userId } = req.user;
         const user = await User.findById(userId);
         if (user.isAccountVerified) {
             return res.json({
@@ -127,7 +128,8 @@ export const sendOTPVerification = async (req, res) => {
             from: process.env.SENDER_EMAIL,
             to: user.email,
             subject: "Please verify your account",
-            text: `Please enter the code ${otp} where you were asked to. Code expires in 15 minutes after receiving this email.`,
+            // text: `Please enter the code ${otp} where you were asked to. Code expires in 15 minutes after receiving this email.`,
+            html: EMAIL_VERIFY_TEMPLATE.replace('{{otp}}', otp).replace('{{email}}', user.email)
         };
 
         await transporter.sendMail(mailOptions);
@@ -142,7 +144,8 @@ export const sendOTPVerification = async (req, res) => {
 };
 
 export const verifyEmail = async (req, res) => {
-    const { userId, otp } = req.body;
+    const userId = req.user.userId;
+    const { otp } = req.body;
 
     if (!userId || !otp) {
         return res.json({
@@ -227,7 +230,8 @@ export const sendPasswordResetOTP = async (req, res) => {
             from: process.env.SENDER_EMAIL,
             to: user.email,
             subject: "Verify your account before password reset",
-            text: `You have asked to reset your password. Please enter the code ${otp} where you were asked to. Code expires in 15 minutes after receiving this email.`,
+            // text: `You have asked to reset your password. Please enter the code ${otp} where you were asked to. Code expires in 15 minutes after receiving this email.`,
+            html: PASSWORD_RESET_TEMPLATE.replace('{{otp}}', otp).replace('{{email}}', user.email)
         };
 
         await transporter.sendMail(mailOptions);
@@ -273,12 +277,15 @@ export const resetPassword = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(newPassword, SALT);
         user.password = hashedPassword;
-        user.passwordResetOTP = '';
+        user.passwordResetOTP = "";
         user.passwordResetOTPExpiresAt = 0;
 
         await user.save();
 
-        res.json({success: true, message: "New password has been set successfully."});
+        res.json({
+            success: true,
+            message: "New password has been set successfully.",
+        });
     } catch (error) {
         res.json({ success: false, message: error.message });
     }

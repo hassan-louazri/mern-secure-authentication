@@ -5,6 +5,7 @@ import 'dotenv/config';
 import connectDB from "./config/mongodb.js";
 import authRouter from "./routes/authRoutes.js";
 import userRouter from "./routes/userRoutes.js";
+import logger from "./middlewares/loggerMiddleware.js";
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -14,7 +15,8 @@ connectDB();
 // Configuration
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ credentials: true }));
+app.use(logger);
+app.use(cors({ origin: ['http://localhost:5173'], credentials: true }));
 
 
 // Endpoints

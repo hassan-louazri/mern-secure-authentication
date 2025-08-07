@@ -2,7 +2,7 @@ import User from "../models/user.js";
 
 export const getUserData = async (req, res) => {
     try {
-        const { userId } = req.body;
+        const userId = req.user.userId;
 
         const user = await User.findById(userId);
 
